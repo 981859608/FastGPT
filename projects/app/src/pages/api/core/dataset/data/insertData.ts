@@ -74,6 +74,11 @@ async function handler(req: NextApiRequest) {
     a: formatA
   });
 
+  /**
+   * 1.embdding数据
+   * 2.存入pg（携带collectionId信息，方便反查）
+   * 3.保存映射关系到mongo
+   */
   const { insertId, tokens } = await insertData2Dataset({
     teamId,
     tmbId,
@@ -86,6 +91,11 @@ async function handler(req: NextApiRequest) {
     indexes: formatIndexes
   });
 
+  /**
+   * 1.计算生成向量的费用
+   * 2.计算触发文本优化的费用
+   * 3.合计 计入消费记录
+   */
   pushGenerateVectorUsage({
     teamId,
     tmbId,

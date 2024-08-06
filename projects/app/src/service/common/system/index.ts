@@ -26,7 +26,7 @@ export const readConfigData = (name: string) => {
       return `data/${name}`;
     }
     // production path
-    return `/app/data/${name}`;
+    return `/root/FastGPT/projects/app/data/${name}`;
   })();
 
   const content = readFileSync(filename, 'utf-8');
@@ -122,7 +122,9 @@ function getSystemVersion() {
     if (process.env.NODE_ENV === 'development') {
       global.systemVersion = process.env.npm_package_version || '0.0.0';
     } else {
-      const packageJson = json5.parse(readFileSync('/app/package.json', 'utf-8'));
+      const packageJson = json5.parse(
+        readFileSync('/root/FastGPT/projects/app/package.json', 'utf-8')
+      );
 
       global.systemVersion = packageJson?.version;
     }
@@ -138,7 +140,9 @@ function getSystemPlugin() {
   if (global.communityPlugins && global.communityPlugins.length > 0) return;
 
   const basePath =
-    process.env.NODE_ENV === 'development' ? 'data/pluginTemplates' : '/app/data/pluginTemplates';
+    process.env.NODE_ENV === 'development'
+      ? 'data/pluginTemplates'
+      : '/root/FastGPT/projects/app/data/pluginTemplates';
   // read data/pluginTemplates directory, get all json file
   const files = readdirSync(basePath);
   // filter json file
@@ -165,7 +169,7 @@ function getSystemPluginV1() {
   const basePath =
     process.env.NODE_ENV === 'development'
       ? 'data/pluginTemplates/v1'
-      : '/app/data/pluginTemplates/v1';
+      : '/root/FastGPT/projects/app/data/pluginTemplates/v1';
   // read data/pluginTemplates directory, get all json file
   const files = readdirSync(basePath);
   // filter json file

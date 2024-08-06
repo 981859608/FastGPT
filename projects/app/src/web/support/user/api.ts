@@ -35,7 +35,8 @@ export const postRegister = ({
   password: string;
   inviterId?: string;
 }) =>
-  POST<ResLogin>(`/proApi/support/user/account/register/emailAndPhone`, {
+  // POST<ResLogin>(`/proApi/support/user/account/register/emailAndPhone`, {
+  POST<ResLogin>(`/support/user/account/register`, {
     username,
     code,
     inviterId,

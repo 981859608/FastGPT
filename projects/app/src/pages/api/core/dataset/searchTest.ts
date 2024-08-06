@@ -28,6 +28,19 @@ async function handler(req: NextApiRequest) {
     datasetSearchExtensionModel,
     datasetSearchExtensionBg = ''
   } = req.body as SearchTestProps;
+  /**
+   * 1.鉴权
+   * 2.校验余额
+   * 3.执行扩展（如使用gpt-4o-mini对问题进行优化，以提高命中）
+   * 4.执行查询
+   *  4.1.输入文本转向量
+   *  4.2.去pg召回
+   *  4.3.结果处理（其中包含排序）
+   *  4.4.根据collectionId反查原始数据，并拼接到返回值中
+   *  4.5.返回结果
+   * 5.计算消耗并保存消费记录
+   * 6.更新apiKey使用记录（如果是通过apiKey访问的话）
+   */
 
   if (!datasetId || !text) {
     return Promise.reject(CommonErrEnum.missingParams);
