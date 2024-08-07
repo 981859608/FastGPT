@@ -14,6 +14,8 @@ import {
 import { NextAPI } from '@/service/middleware/entry';
 import { ReadPermissionVal } from '@fastgpt/global/support/permission/constant';
 import { CommonErrEnum } from '@fastgpt/global/common/error/code/common';
+import { logicHooksManager } from '@fastgpt/service/hooks/logic_hooks_manager';
+import { HookNameEnum } from '@fastgpt/service/hooks/constants';
 
 async function handler(req: NextApiRequest) {
   const {
@@ -58,6 +60,8 @@ async function handler(req: NextApiRequest) {
   });
   // auth balance
   await checkTeamAIPoints(teamId);
+  // 执行钩子校验余额
+  logicHooksManager.executeHooks(HookNameEnum.checkTeamBalance, teamId);
 
   // query extension
   const extensionModel =
@@ -80,6 +84,21 @@ async function handler(req: NextApiRequest) {
     datasetIds: [datasetId],
     searchMode,
     usingReRank: usingReRank && (await checkTeamReRankPermission(teamId))
+  });
+
+  // 执行钩子扣减余额
+  logicHooksManager.executeHooks(HookNameEnum.reduceTeamBalance, {
+    teamId,
+    tmbId,
+    tokens,
+    model: dataset.vectorModel,
+    source: apikey ? UsageSourceEnum.api : UsageSourceEnum.fastgpt,
+
+    ...(aiExtensionResult &&
+      extensionModel && {
+        extensionModel: extensionModel.name,
+        extensionTokens: aiExtensionResult.tokens
+      })
   });
 
   // push bill

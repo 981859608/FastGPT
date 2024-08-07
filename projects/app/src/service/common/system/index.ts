@@ -9,6 +9,7 @@ import { FastGPTProUrl } from '@fastgpt/service/common/system/constants';
 import { initFastGPTConfig } from '@fastgpt/service/common/system/tools';
 import json5 from 'json5';
 import { SystemPluginTemplateItemType } from '@fastgpt/global/core/workflow/type';
+import '@fastgpt/nyai/register_all_hooks';
 
 export const readConfigData = (name: string) => {
   const isDev = process.env.NODE_ENV === 'development';

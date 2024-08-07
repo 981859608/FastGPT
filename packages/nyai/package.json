@@ -1,0 +1,7 @@
+{
+  "name": "@fastgpt/nyai",
+  "version": "1.0.0",
+  "dependencies": {
+    "@fastgpt/service": "workspace:*"
+  }
+}
