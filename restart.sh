@@ -2,6 +2,7 @@
 
 cd projects/app
 
+
 pnpm install
 pnpm build
 
