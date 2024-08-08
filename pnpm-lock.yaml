@@ -84,6 +84,9 @@ importers:
       '@fastgpt/service':
         specifier: workspace:*
         version: link:../service
+      axios:
+        specifier: ^1.5.1
+        version: 1.7.2
 
   packages/plugins:
     dependencies:

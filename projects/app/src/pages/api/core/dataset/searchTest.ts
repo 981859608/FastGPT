@@ -93,6 +93,7 @@ async function handler(req: NextApiRequest) {
     tokens,
     model: dataset.vectorModel,
     source: apikey ? UsageSourceEnum.api : UsageSourceEnum.fastgpt,
+    duration: Date.now() - start,
 
     ...(aiExtensionResult &&
       extensionModel && {

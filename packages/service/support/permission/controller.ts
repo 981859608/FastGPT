@@ -105,7 +105,6 @@ export function authJWT(token: string) {
         return;
       }
 
-      console.log('decoded=', decoded);
       resolve({
         userId: decoded.userId,
         teamId: decoded.teamId || '',

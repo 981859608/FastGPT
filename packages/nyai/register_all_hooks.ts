@@ -1,8 +1,72 @@
+import axios from 'axios';
 import { logicHooksManager } from '@fastgpt/service/hooks/logic_hooks_manager';
 import { HookNameEnum } from '@fastgpt/service/hooks/constants';
 
-logicHooksManager.registerHook(HookNameEnum.checkTeamBalance, (teamId) => {
-  console.log('注入钩子 执行通用逻辑前置调用, teamId = ', teamId);
+logicHooksManager.registerHook(HookNameEnum.checkTeamBalance, async (teamId) => {
+  try {
+    const response = await axios.get(
+      'http://testchatmoss.aihao123.cn/luomacode-api/inner/rag/canUseAI/balanceInfo',
+      {
+        params: { teamId },
+        headers: { pwd: 'KU&SIUoierjefo9e798wehfl' }
+      }
+    );
+
+    const { data } = response;
+    if (data.code === 0 && data.data > 0) {
+      console.log('余额充足');
+    } else {
+      throw new Error('余额不足');
+    }
+  } catch (error) {
+    console.error('检查余额时发生错误:', error);
+    throw error; // 抛出异常以便调用者处理
+  }
 });
 
-console.log('注入钩子');
+logicHooksManager.registerHook(HookNameEnum.reduceTeamBalance, async (...params) => {
+  try {
+    console.log('params========', params);
+    // 假设 params 是一个数组，包含一个或多个对象
+    for (const param of params) {
+      const { teamId, tmbId, tokens, model, source, duration, extensionModel, extensionTokens } =
+        param;
+
+      let allTokens = tokens;
+      if (extensionTokens && extensionTokens > 0) {
+        allTokens += extensionTokens;
+      }
+      // 构建请求体
+      const requestBody = {
+        teamId,
+        mossModelCodeName: model,
+        questionTokens: allTokens,
+        answerTokens: 0,
+        elapsedTime: duration
+      };
+
+      // 发起 HTTP POST 请求
+      const response = await axios.post(
+        'http://testchatmoss.aihao123.cn/luomacode-api/inner/rag/canUseAI/balance',
+        requestBody,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            pwd: 'KU&SIUoierjefo9e798wehfl'
+          }
+        }
+      );
+
+      // 检查响应
+      const { data } = response;
+      if (data.code === 0) {
+        console.log('余额减少成功');
+      } else {
+        throw new Error('余额减少失败');
+      }
+    }
+  } catch (error) {
+    console.error('减少余额时发生错误:', error);
+    throw error; // 抛出异常以便调用者处理
+  }
+});

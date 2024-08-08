@@ -2,6 +2,7 @@
   "name": "@fastgpt/nyai",
   "version": "1.0.0",
   "dependencies": {
-    "@fastgpt/service": "workspace:*"
+    "@fastgpt/service": "workspace:*",
+    "axios": "^1.5.1"
   }
 }
