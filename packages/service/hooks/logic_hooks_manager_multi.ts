@@ -1,22 +1,25 @@
 // LogicHooksManager.ts
-// 同一个函数名，只注册一个
+// 同一个函数名，可以注册多个函数，调用时遍历调用
 
 import { HookNameEnum } from './constants';
 
 export type HookFunction = (...args: any[]) => void;
 
 class LogicHooksManager {
-  private hooks: { [key in HookNameEnum]?: HookFunction } = {};
+  private hooks: { [key in HookNameEnum]?: HookFunction[] } = {};
 
   registerHook(hookName: HookNameEnum, fn: HookFunction) {
-    // 直接覆盖同一个 hookName 的函数
-    this.hooks[hookName] = fn;
+    if (!this.hooks[hookName]) {
+      this.hooks[hookName] = [];
+    }
+    this.hooks[hookName].push(fn);
   }
 
   executeHooks(hookName: HookNameEnum, ...args: any[]) {
-    const fn = this.hooks[hookName];
-    if (fn) {
-      fn(...args);
+    if (this.hooks[hookName]) {
+      for (const fn of this.hooks[hookName]) {
+        fn(...args);
+      }
     } else {
       console.log('没有找到hookName对应的的函数', hookName);
     }

@@ -82,8 +82,8 @@ export function createJWT(user: { _id?: string; team?: { teamId?: string; tmbId:
     {
       userId: String(user._id),
       teamId: String(user.team?.teamId),
-      tmbId: String(user.team?.tmbId),
-      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
+      tmbId: String(user.team?.tmbId)
+      // exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
     },
     key
   );
@@ -105,6 +105,7 @@ export function authJWT(token: string) {
         return;
       }
 
+      console.log('decoded=', decoded);
       resolve({
         userId: decoded.userId,
         teamId: decoded.teamId || '',
