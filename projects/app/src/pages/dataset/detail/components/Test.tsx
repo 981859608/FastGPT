@@ -87,10 +87,11 @@ const Test = ({ datasetId }: { datasetId: string }) => {
   } = useDisclosure();
 
   const datasetIds = [datasetId];
+  const env = 'test';
 
   const { mutate: onTextTest, isLoading: textTestIsLoading } = useRequest({
     mutationFn: ({ inputText, searchParams }: FormType) =>
-      postSearchText({ datasetId, datasetIds, text: inputText.trim(), ...searchParams }),
+      postSearchText({ datasetId, datasetIds, env, text: inputText.trim(), ...searchParams }),
     onSuccess(res: SearchTestResponse) {
       if (!res || res.list.length === 0) {
         return toast({

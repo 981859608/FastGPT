@@ -2,13 +2,30 @@ import axios from 'axios';
 import { logicHooksManager } from '@fastgpt/service/hooks/logic_hooks_manager';
 import { HookNameEnum } from '@fastgpt/service/hooks/constants';
 
-logicHooksManager.registerHook(HookNameEnum.checkTeamBalance, async (teamId) => {
+// 常量配置
+const CONFIG = {
+  headers: {
+    'Content-Type': 'application/json',
+    pwd: 'KU&SIUoierjefo9e798wehfl'
+  }
+};
+
+// 根据传过来的env获取Java服务ip
+function getJavaServerHost(env: string) {
+  if (env === 'test') {
+    return 'http://172.19.0.11';
+  } else {
+    return 'http://172.19.0.14';
+  }
+}
+
+logicHooksManager.registerHook(HookNameEnum.checkTeamBalance, async (teamId, env) => {
   try {
     const response = await axios.get(
-      'http://testchatmoss.aihao123.cn/luomacode-api/inner/rag/canUseAI/balanceInfo',
+      `${getJavaServerHost(env)}/luomacode-api/inner/rag/canUseAI/balanceInfo`,
       {
         params: { teamId },
-        headers: { pwd: 'KU&SIUoierjefo9e798wehfl' }
+        headers: CONFIG.headers
       }
     );
 
@@ -27,16 +44,24 @@ logicHooksManager.registerHook(HookNameEnum.checkTeamBalance, async (teamId) => 
 logicHooksManager.registerHook(HookNameEnum.reduceTeamBalance, async (...params) => {
   try {
     console.log('params========', params);
-    // 假设 params 是一个数组，包含一个或多个对象
     for (const param of params) {
-      const { teamId, tmbId, tokens, model, source, duration, extensionModel, extensionTokens } =
-        param;
+      const {
+        teamId,
+        tmbId,
+        tokens,
+        model,
+        source,
+        duration,
+        extensionModel,
+        extensionTokens,
+        env
+      } = param;
 
       let allTokens = tokens;
       if (extensionTokens && extensionTokens > 0) {
         allTokens += extensionTokens;
       }
-      // 构建请求体
+
       const requestBody = {
         teamId,
         mossModelCodeName: model,
@@ -45,19 +70,12 @@ logicHooksManager.registerHook(HookNameEnum.reduceTeamBalance, async (...params)
         elapsedTime: duration
       };
 
-      // 发起 HTTP POST 请求
       const response = await axios.post(
-        'http://testchatmoss.aihao123.cn/luomacode-api/inner/rag/canUseAI/balance',
+        `${getJavaServerHost(env)}/luomacode-api/inner/rag/canUseAI/balance`,
         requestBody,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            pwd: 'KU&SIUoierjefo9e798wehfl'
-          }
-        }
+        { headers: CONFIG.headers }
       );
 
-      // 检查响应
       const { data } = response;
       if (data.code === 0) {
         console.log('余额减少成功');

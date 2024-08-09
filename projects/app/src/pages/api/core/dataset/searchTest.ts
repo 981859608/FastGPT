@@ -21,6 +21,7 @@ async function handler(req: NextApiRequest) {
   let {
     datasetId,
     datasetIds,
+    env,
     text,
     limit = 1500,
     similarity,
@@ -72,7 +73,7 @@ async function handler(req: NextApiRequest) {
   // auth balance
   await checkTeamAIPoints(teamId);
   // 执行钩子校验余额
-  logicHooksManager.executeHooks(HookNameEnum.checkTeamBalance, teamId);
+  logicHooksManager.executeHooks(HookNameEnum.checkTeamBalance, teamId, env);
 
   // query extension
   const extensionModel =
@@ -110,7 +111,8 @@ async function handler(req: NextApiRequest) {
       extensionModel && {
         extensionModel: extensionModel.name,
         extensionTokens: aiExtensionResult.tokens
-      })
+      }),
+    env
   });
 
   // push bill
