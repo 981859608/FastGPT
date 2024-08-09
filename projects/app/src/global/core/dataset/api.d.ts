@@ -55,6 +55,7 @@ export type GetTrainingQueueResponse = {
 /* -------------- search ---------------- */
 export type SearchTestProps = {
   datasetId: string;
+  datasetIds: string[];
   text: string;
   [NodeInputKeyEnum.datasetSimilarity]?: number;
   [NodeInputKeyEnum.datasetMaxTokens]?: number;

@@ -18,8 +18,9 @@ import { logicHooksManager } from '@fastgpt/service/hooks/logic_hooks_manager';
 import { HookNameEnum } from '@fastgpt/service/hooks/constants';
 
 async function handler(req: NextApiRequest) {
-  const {
+  let {
     datasetId,
+    datasetIds,
     text,
     limit = 1500,
     similarity,
@@ -43,6 +44,16 @@ async function handler(req: NextApiRequest) {
    * 5.计算消耗并保存消费记录
    * 6.更新apiKey使用记录（如果是通过apiKey访问的话）
    */
+
+  // 使该接口支持传入多个知识库ID，也要兼容之前只传入一个知识库的情况，所以做以下两种情况的赋值
+  // 如果 datasetIds 不为空，datasetId = datasetIds[0]
+  if (datasetIds && datasetIds.length > 0) {
+    datasetId = datasetIds[0];
+  }
+  // 如果 datasetIds 为空，datasetIds = [datasetId]
+  if (!datasetIds || datasetIds.length === 0) {
+    datasetIds = [datasetId];
+  }
 
   if (!datasetId || !text) {
     return Promise.reject(CommonErrEnum.missingParams);
@@ -81,7 +92,7 @@ async function handler(req: NextApiRequest) {
     model: dataset.vectorModel,
     limit: Math.min(limit, 20000),
     similarity,
-    datasetIds: [datasetId],
+    datasetIds: datasetIds,
     searchMode,
     usingReRank: usingReRank && (await checkTeamReRankPermission(teamId))
   });

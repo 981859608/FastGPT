@@ -24,6 +24,7 @@ export const checkDatasetLimit = async ({
     // );
   }
 
+  // 校验AI积分
   if (usedPoints >= totalPoints) {
     // return Promise.reject(TeamErrEnum.aiPointsNotEnough);
   }
