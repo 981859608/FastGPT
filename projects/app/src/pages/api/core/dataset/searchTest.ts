@@ -99,21 +99,21 @@ async function handler(req: NextApiRequest) {
   });
 
   // 执行钩子扣减余额
-  logicHooksManager.executeHooks(HookNameEnum.reduceTeamBalance, {
-    teamId,
-    tmbId,
-    tokens,
-    model: dataset.vectorModel,
-    source: apikey ? UsageSourceEnum.api : UsageSourceEnum.fastgpt,
-    duration: Date.now() - start,
+  // logicHooksManager.executeHooks(HookNameEnum.reduceTeamBalance, {
+  //   teamId,
+  //   tmbId,
+  //   tokens,
+  //   model: dataset.vectorModel,
+  //   source: apikey ? UsageSourceEnum.api : UsageSourceEnum.fastgpt,
+  //   duration: Date.now() - start,
 
-    ...(aiExtensionResult &&
-      extensionModel && {
-        extensionModel: extensionModel.name,
-        extensionTokens: aiExtensionResult.tokens
-      }),
-    env
-  });
+  //   ...(aiExtensionResult &&
+  //     extensionModel && {
+  //       extensionModel: extensionModel.name,
+  //       extensionTokens: aiExtensionResult.tokens
+  //     }),
+  //   env
+  // });
 
   // push bill
   const { totalPoints } = pushGenerateVectorUsage({

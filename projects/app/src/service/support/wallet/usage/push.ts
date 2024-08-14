@@ -4,6 +4,28 @@ import { addLog } from '@fastgpt/service/common/system/log';
 import { createUsage, concatUsage } from './controller';
 import { formatModelChars2Points } from '@fastgpt/service/support/wallet/usage/utils';
 import { ChatNodeUsageType } from '@fastgpt/global/support/wallet/bill/type';
+import { logicHooksManager } from '@fastgpt/service/hooks/logic_hooks_manager';
+import { HookNameEnum } from '@fastgpt/service/hooks/constants';
+
+const doReduceMossHashrate = ({
+  teamId,
+  tokens,
+  model,
+  duration
+}: {
+  teamId: string;
+  tokens: number;
+  model: string;
+  duration: number;
+}) => {
+  // 执行钩子扣减余额
+  logicHooksManager.executeHooks(HookNameEnum.reduceTeamBalance, {
+    teamId,
+    tokens,
+    model: model,
+    duration: duration
+  });
+};
 
 export const pushChatUsage = ({
   appName,
@@ -60,6 +82,8 @@ export const pushQAUsage = async ({
   tokens: number;
   billId: string;
 }) => {
+  // 扣减能用AI的余额
+  doReduceMossHashrate({ teamId, tokens, model, duration: 0 });
   // 计算价格
   const { totalPoints } = formatModelChars2Points({
     model,
@@ -99,6 +123,13 @@ export const pushGenerateVectorUsage = ({
   extensionModel?: string;
   extensionTokens?: number;
 }) => {
+  // 扣减能用AI的余额
+  let allTokens = tokens;
+  if (extensionTokens && extensionTokens > 0) {
+    allTokens += extensionTokens;
+  }
+  doReduceMossHashrate({ teamId, tokens: allTokens, model, duration: 0 });
+
   const { totalPoints: totalVector, modelName: vectorModelName } = formatModelChars2Points({
     modelType: ModelTypeEnum.vector,
     model,
@@ -174,6 +205,8 @@ export const pushQuestionGuideUsage = ({
   tmbId: string;
 }) => {
   const qgModel = global.llmModels[0];
+  // 扣减能用AI的余额
+  doReduceMossHashrate({ teamId, tokens, model: qgModel.model, duration: 0 });
   const { totalPoints, modelName } = formatModelChars2Points({
     tokens,
     model: qgModel.model,
@@ -212,6 +245,8 @@ export function pushAudioSpeechUsage({
   tmbId: string;
   source: UsageSourceEnum;
 }) {
+  // 扣减能用AI的余额
+  doReduceMossHashrate({ teamId, tokens: charsLength, model: model, duration: 0 });
   const { totalPoints, modelName } = formatModelChars2Points({
     model,
     tokens: charsLength,
@@ -247,6 +282,9 @@ export function pushWhisperUsage({
   const whisperModel = global.whisperModel;
 
   if (!whisperModel) return;
+
+  // 扣减能用AI的余额
+  doReduceMossHashrate({ teamId, tokens: duration, model: whisperModel.model, duration: 0 });
 
   const { totalPoints, modelName } = formatModelChars2Points({
     model: whisperModel.model,

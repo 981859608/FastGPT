@@ -45,21 +45,15 @@ logicHooksManager.registerHook(HookNameEnum.reduceTeamBalance, async (...params)
   try {
     console.log('params========', params);
     for (const param of params) {
-      const {
-        teamId,
-        tmbId,
-        tokens,
-        model,
-        source,
-        duration,
-        extensionModel,
-        extensionTokens,
-        env
-      } = param;
+      const { teamId, tokens, model, duration, extensionTokens, env } = param;
 
       let allTokens = tokens;
       if (extensionTokens && extensionTokens > 0) {
         allTokens += extensionTokens;
+      }
+      let realEnv = 'test';
+      if (env) {
+        realEnv = env;
       }
 
       const requestBody = {
@@ -71,7 +65,7 @@ logicHooksManager.registerHook(HookNameEnum.reduceTeamBalance, async (...params)
       };
 
       const response = await axios.post(
-        `${getJavaServerHost(env)}/luomacode-api/inner/rag/canUseAI/balance`,
+        `${getJavaServerHost(realEnv)}/luomacode-api/inner/rag/canUseAI/balance`,
         requestBody,
         { headers: CONFIG.headers }
       );
