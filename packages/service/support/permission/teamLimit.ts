@@ -2,9 +2,8 @@ import { getTeamPlanStatus, getTeamStandPlan } from '../../support/wallet/sub/ut
 import { MongoApp } from '../../core/app/schema';
 import { MongoDataset } from '../../core/dataset/schema';
 import { DatasetTypeEnum } from '@fastgpt/global/core/dataset/constants';
-import { TeamErrEnum } from '@fastgpt/global/common/error/code/team';
-import { SystemErrEnum } from '@fastgpt/global/common/error/code/system';
 import { AppTypeEnum } from '@fastgpt/global/core/app/constants';
+import { HookNameEnum, logicHooksManager } from '@fastgpt/hook/logic_hooks_manager';
 
 export const checkDatasetLimit = async ({
   teamId,
@@ -32,6 +31,9 @@ export const checkDatasetLimit = async ({
 };
 
 export const checkTeamAIPoints = async (teamId: string) => {
+  // 执行钩子校验余额
+  logicHooksManager.executeHooks(HookNameEnum.checkTeamBalance, teamId);
+
   const { standardConstants, totalPoints, usedPoints } = await getTeamPlanStatus({
     teamId
   });

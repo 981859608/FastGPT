@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { logicHooksManager } from '@fastgpt/service/hooks/logic_hooks_manager';
-import { HookNameEnum } from '@fastgpt/service/hooks/constants';
+import { HookNameEnum, logicHooksManager } from '@fastgpt/hook/logic_hooks_manager';
 
 // 常量配置
 const CONFIG = {
@@ -11,6 +10,7 @@ const CONFIG = {
 };
 
 // 根据传过来的env获取Java服务ip
+// todo 这里要改成根据启动时的环境变量判断
 function getJavaServerHost(env: string) {
   if (env === 'test') {
     return 'http://172.19.0.11';
@@ -21,8 +21,12 @@ function getJavaServerHost(env: string) {
 
 logicHooksManager.registerHook(HookNameEnum.checkTeamBalance, async (teamId, env) => {
   try {
+    let realEnv = 'test';
+    if (env) {
+      realEnv = env;
+    }
     const response = await axios.get(
-      `${getJavaServerHost(env)}/luomacode-api/inner/rag/canUseAI/balanceInfo`,
+      `${getJavaServerHost(realEnv)}/luomacode-api/inner/rag/canUseAI/balanceInfo`,
       {
         params: { teamId },
         headers: CONFIG.headers

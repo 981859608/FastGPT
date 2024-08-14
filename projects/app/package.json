@@ -23,6 +23,7 @@
     "@fastgpt/service": "workspace:*",
     "@fastgpt/nyai": "workspace:*",
     "@fastgpt/web": "workspace:*",
+    "@fastgpt/hook": "workspace:*",
     "@fortaine/fetch-event-source": "^3.0.6",
     "@node-rs/jieba": "1.10.0",
     "@tanstack/react-query": "^4.24.10",

@@ -14,8 +14,6 @@ import {
 import { NextAPI } from '@/service/middleware/entry';
 import { ReadPermissionVal } from '@fastgpt/global/support/permission/constant';
 import { CommonErrEnum } from '@fastgpt/global/common/error/code/common';
-import { logicHooksManager } from '@fastgpt/service/hooks/logic_hooks_manager';
-import { HookNameEnum } from '@fastgpt/service/hooks/constants';
 
 async function handler(req: NextApiRequest) {
   let {
@@ -72,8 +70,6 @@ async function handler(req: NextApiRequest) {
   });
   // auth balance
   await checkTeamAIPoints(teamId);
-  // 执行钩子校验余额
-  logicHooksManager.executeHooks(HookNameEnum.checkTeamBalance, teamId, env);
 
   // query extension
   const extensionModel =

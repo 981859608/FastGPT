@@ -1,7 +1,7 @@
 // LogicHooksManager.ts
 // 同一个函数名，可以注册多个函数，调用时遍历调用
 
-import { HookNameEnum } from './constants';
+import { HookNameEnum } from './logic_hooks_manager';
 
 export type HookFunction = (...args: any[]) => void;
 

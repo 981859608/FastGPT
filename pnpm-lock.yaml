@@ -79,8 +79,13 @@ importers:
         specifier: 20.14.0
         version: 20.14.0
 
+  packages/hook: {}
+
   packages/nyai:
     dependencies:
+      '@fastgpt/hook':
+        specifier: workspace:*
+        version: link:../hook
       '@fastgpt/service':
         specifier: workspace:*
         version: link:../service
@@ -121,6 +126,9 @@ importers:
       '@fastgpt/global':
         specifier: workspace:*
         version: link:../global
+      '@fastgpt/hook':
+        specifier: workspace:*
+        version: link:../hook
       '@node-rs/jieba':
         specifier: 1.10.0
         version: 1.10.0
@@ -396,6 +404,9 @@ importers:
       '@fastgpt/global':
         specifier: workspace:*
         version: link:../../packages/global
+      '@fastgpt/hook':
+        specifier: workspace:*
+        version: link:../../packages/hook
       '@fastgpt/nyai':
         specifier: workspace:*
         version: link:../../packages/nyai

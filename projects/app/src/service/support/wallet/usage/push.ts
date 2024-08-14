@@ -4,8 +4,7 @@ import { addLog } from '@fastgpt/service/common/system/log';
 import { createUsage, concatUsage } from './controller';
 import { formatModelChars2Points } from '@fastgpt/service/support/wallet/usage/utils';
 import { ChatNodeUsageType } from '@fastgpt/global/support/wallet/bill/type';
-import { logicHooksManager } from '@fastgpt/service/hooks/logic_hooks_manager';
-import { HookNameEnum } from '@fastgpt/service/hooks/constants';
+import { HookNameEnum, logicHooksManager } from '@fastgpt/hook/logic_hooks_manager';
 
 const doReduceMossHashrate = ({
   teamId,

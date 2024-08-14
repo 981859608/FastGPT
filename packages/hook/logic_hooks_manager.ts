@@ -1,7 +1,12 @@
 // LogicHooksManager.ts
 // 同一个函数名，只注册一个
 
-import { HookNameEnum } from './constants';
+export enum HookNameEnum {
+  // 前置检查余额
+  checkTeamBalance = 'checkTeamBalance',
+  // 执行后置扣费逻辑
+  reduceTeamBalance = 'reduceTeamBalance'
+}
 
 export type HookFunction = (...args: any[]) => void;
 
