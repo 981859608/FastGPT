@@ -13,10 +13,13 @@ const doReduceMossHashrate = ({
   duration
 }: {
   teamId: string;
-  tokens: number;
-  model: string;
+  tokens?: number;
+  model?: string;
   duration: number;
 }) => {
+  if (!tokens || !model) {
+    return;
+  }
   // 执行钩子扣减余额
   logicHooksManager.executeHooks(HookNameEnum.reduceTeamBalance, {
     teamId,
@@ -44,6 +47,10 @@ export const pushChatUsage = ({
   flowUsages: ChatNodeUsageType[];
 }) => {
   const totalPoints = flowUsages.reduce((sum, item) => sum + (item.totalPoints || 0), 0);
+  flowUsages.map((item: ChatNodeUsageType) => {
+    // 扣减能用AI的余额
+    doReduceMossHashrate({ teamId, tokens: item.tokens, model: item.model, duration: 0 });
+  });
 
   createUsage({
     teamId,
