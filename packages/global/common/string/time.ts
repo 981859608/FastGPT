@@ -1,5 +1,10 @@
 import dayjs from 'dayjs';
 import cronParser from 'cron-parser';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const formatTime2YMDHMW = (time?: Date) => dayjs(time).format('YYYY-MM-DD HH:mm:ss dddd');
 export const formatTime2YMDHM = (time?: Date) =>
@@ -21,7 +26,7 @@ export const formatTimeToChatTime = (time: Date) => {
 
   // 如果时间是今天，展示几时:几分
   if (now.isSame(target, 'day')) {
-    return target.format('HH:mm');
+    return target.format('HH : mm');
   }
 
   // 如果是昨天，展示昨天

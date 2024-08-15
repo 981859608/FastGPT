@@ -1,4 +1,4 @@
-import { useState, useRef, useTransition, useEffect } from 'react';
+import { useState, useRef, useTransition } from 'react';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
@@ -35,7 +35,8 @@ export default function Editor({
   onBlur,
   value,
   placeholder = '',
-  isFlow
+  isFlow,
+  bg = 'white'
 }: {
   h?: number;
   maxLength?: number;
@@ -49,6 +50,7 @@ export default function Editor({
   value?: string;
   placeholder?: string;
   isFlow?: boolean;
+  bg?: string;
 }) {
   const [key, setKey] = useState(getNanoid(6));
   const [_, startSts] = useTransition();
@@ -95,6 +97,7 @@ export default function Editor({
       h={`${height}px`}
       cursor={'text'}
       color={'myGray.700'}
+      bg={focus ? 'white' : bg}
     >
       <LexicalComposer initialConfig={initialConfig} key={key}>
         <PlainTextPlugin

@@ -21,7 +21,7 @@ import {
 } from '@fastgpt/global/core/workflow/runtime/utils';
 import { GPTMessages2Chats, chatValue2RuntimePrompt } from '@fastgpt/global/core/chat/adapt';
 import { getChatItems } from '@fastgpt/service/core/chat/controller';
-import { saveChat } from '@/service/utils/chat/saveChat';
+import { saveChat } from '@fastgpt/service/core/chat/saveChat';
 import { responseWrite } from '@fastgpt/service/common/response';
 import { pushChatUsage } from '@/service/support/wallet/usage/push';
 import { authOutLinkChatStart } from '@/service/support/permission/auth/outLink';
@@ -201,7 +201,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
               type: ChatItemValueTypeEnum.text,
               text: {
                 content: getPluginRunContent({
-                  pluginInputs: getPluginInputsFromStoreNodes(app.modules)
+                  pluginInputs: getPluginInputsFromStoreNodes(app.modules),
+                  variables
                 })
               }
             }
@@ -248,6 +249,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       if (app.version === 'v2') {
         return dispatchWorkFlow({
           res,
+          requestOrigin: req.headers.origin,
           mode: 'chat',
           user,
           teamId: String(teamId),
@@ -259,6 +261,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           runtimeEdges: initWorkflowEdgeStatus(edges),
           variables: runtimeVariables,
           query: removeEmptyUserInput(userQuestion.value),
+          chatConfig,
           histories: newHistories,
           stream,
           detail,

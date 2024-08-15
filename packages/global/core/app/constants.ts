@@ -1,4 +1,4 @@
-import { AppTTSConfigType, AppWhisperConfigType } from './type';
+import { AppTTSConfigType, AppFileSelectConfigType, AppWhisperConfigType } from './type';
 
 export enum AppTypeEnum {
   folder = 'folder',
@@ -23,3 +23,18 @@ export const defaultChatInputGuideConfig = {
   textList: [],
   customUrl: ''
 };
+
+export const defaultAppSelectFileConfig: AppFileSelectConfigType = {
+  canSelectFile: false,
+  canSelectImg: false,
+  maxFiles: 10
+};
+
+export enum AppTemplateTypeEnum {
+  recommendation = 'recommendation',
+  writing = 'writing',
+  imageGeneration = 'image-generation',
+  webSearch = 'web-search',
+  roleplay = 'roleplay',
+  officeServices = 'office-services'
+}

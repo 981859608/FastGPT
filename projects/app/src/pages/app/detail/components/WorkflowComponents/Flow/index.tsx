@@ -25,6 +25,8 @@ import { connectionLineStyle, defaultEdgeOptions } from '../constants';
 import { useContextSelector } from 'use-context-selector';
 import { WorkflowContext } from '../context';
 import { useWorkflow } from './hooks/useWorkflow';
+import { t } from 'i18next';
+import HelperLines from './components/HelperLines';
 
 const NodeSimple = dynamic(() => import('./nodes/NodeSimple'));
 const nodeTypes: Record<FlowNodeTypeEnum, any> = {
@@ -35,6 +37,7 @@ const nodeTypes: Record<FlowNodeTypeEnum, any> = {
   [FlowNodeTypeEnum.systemConfig]: dynamic(() => import('./nodes/NodeSystemConfig')),
   [FlowNodeTypeEnum.workflowStart]: dynamic(() => import('./nodes/NodeWorkflowStart')),
   [FlowNodeTypeEnum.chatNode]: NodeSimple,
+  [FlowNodeTypeEnum.readFiles]: NodeSimple,
   [FlowNodeTypeEnum.datasetSearchNode]: NodeSimple,
   [FlowNodeTypeEnum.datasetConcatNode]: dynamic(() => import('./nodes/NodeDatasetConcat')),
   [FlowNodeTypeEnum.answerNode]: dynamic(() => import('./nodes/NodeAnswer')),
@@ -60,7 +63,8 @@ const edgeTypes = {
 };
 
 const Workflow = () => {
-  const { nodes, edges, reactFlowWrapper } = useContextSelector(WorkflowContext, (v) => v);
+  const { nodes, edges, reactFlowWrapper, helperLineHorizontal, helperLineVertical } =
+    useContextSelector(WorkflowContext, (v) => v);
 
   const {
     ConfirmDeleteModal,
@@ -133,6 +137,7 @@ const Workflow = () => {
           onEdgeMouseLeave={onEdgeMouseLeave}
         >
           <FlowController />
+          <HelperLines horizontal={helperLineHorizontal} vertical={helperLineVertical} />
         </ReactFlow>
       </Box>
 
@@ -171,7 +176,7 @@ const FlowController = React.memo(function FlowController() {
           showInteractive={false}
           showFitView={false}
         >
-          <MyTooltip label={'页面居中'}>
+          <MyTooltip label={t('common:common.page_center')}>
             <ControlButton className="custom-workflow-fix_view" onClick={() => fitView()}>
               <MyIcon name={'core/modules/fixview'} w={'14px'} />
             </ControlButton>

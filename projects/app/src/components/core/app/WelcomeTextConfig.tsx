@@ -1,5 +1,5 @@
 import { Box, Flex, TextareaProps } from '@chakra-ui/react';
-import React, { useTransition } from 'react';
+import React from 'react';
 import MyIcon from '@fastgpt/web/components/common/Icon';
 import ChatFunctionTip from './Tip';
 import MyTextarea from '@/components/common/Textarea/MyTextarea';
@@ -22,6 +22,7 @@ const WelcomeTextConfig = (props: TextareaProps) => {
         mt={2}
         rows={6}
         fontSize={'sm'}
+        bg={'myGray.50'}
         placeholder={t('common:core.app.tip.welcomeTextTip')}
         {...props}
       />
