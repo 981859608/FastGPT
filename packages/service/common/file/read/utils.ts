@@ -96,5 +96,12 @@ export const readRawContentByFileBuffer = async ({
     }
   }
 
+  // 检查文档内容是否过大，若过大，就截断
+  const MAX_CHARACTERS = 100000;
+  if (rawText.length > MAX_CHARACTERS) {
+    console.log('文档内容过大, 已触发截断, 仅返回前', MAX_CHARACTERS, '字符');
+    rawText = rawText.substring(0, MAX_CHARACTERS) + '......';
+  }
+
   return { rawText };
 };
