@@ -6,7 +6,9 @@ const CONFIG = {
   headers: {
     'Content-Type': 'application/json',
     pwd: 'KU&SIUoierjefo9e798wehfl'
-  }
+  },
+  // env: 'test'
+  env: 'prod'
 };
 
 // 根据传过来的env获取Java服务ip
@@ -21,7 +23,7 @@ function getJavaServerHost(env: string) {
 
 logicHooksManager.registerHook(HookNameEnum.checkTeamBalance, async (teamId, env) => {
   try {
-    let realEnv = 'test';
+    let realEnv = CONFIG.env;
     if (env) {
       realEnv = env;
     }
@@ -55,7 +57,7 @@ logicHooksManager.registerHook(HookNameEnum.reduceTeamBalance, async (...params)
       if (extensionTokens && extensionTokens > 0) {
         allTokens += extensionTokens;
       }
-      let realEnv = 'test';
+      let realEnv = CONFIG.env;
       if (env) {
         realEnv = env;
       }
